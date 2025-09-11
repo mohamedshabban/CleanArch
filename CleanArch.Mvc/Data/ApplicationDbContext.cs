@@ -11,7 +11,7 @@ namespace CleanArch.Mvc.Data
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
+
         }
     }
 }
