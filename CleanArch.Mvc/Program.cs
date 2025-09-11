@@ -17,10 +17,18 @@ namespace CleanArch.Mvc
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services
+                .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.Name = ".AspNetCore.Identity.Application"; // default name
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(1000);        // how long user stays logged in
+                options.SlidingExpiration = true;                        // renews cookie if user is active
+                options.LoginPath = "/Identity/Account/Login";            // redirect if not logged in
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

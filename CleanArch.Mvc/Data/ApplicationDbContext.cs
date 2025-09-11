@@ -11,13 +11,7 @@ namespace CleanArch.Mvc.Data
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(
-                    "UniversityDbConnection",
-                    x => x.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)
-                          .MigrationsHistoryTable("__EFMigrationsHistory", "dbo"));
-            }
+            
         }
     }
 }
