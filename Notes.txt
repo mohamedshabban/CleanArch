@@ -1,0 +1,10 @@
+Libraries --> CleanArch.Infra.Data
+Microsoft.EntityFrameworkCore -- version 8.0.20
+Microsoft.EntityFrameworkCore.Design -- version 8.0.20
+Microsoft.EntityFrameworkCore.SqlServer -- version 8.0.20
+Microsoft.EntityFrameworkCore.Tools -- version 8.0.20
+
+-------------------------------------------------------------------------------
+Microsoft.EntityFrameworkCore.SqlServer -- version 8.0.20
+Microsoft.EntityFrameworkCore.Tools  -- version 8.0.20
+add-migration Initial -o Data/Migrations

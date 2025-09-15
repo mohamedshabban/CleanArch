@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CleanArch.Mvc.Migrations
+namespace CleanArch.Mvc.Data.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
