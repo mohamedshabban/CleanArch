@@ -12,6 +12,12 @@ namespace CleanArch.Mvc
         }
         private static IHostBuilder CreateHostBuilder(string[] args) =>
                     Host.CreateDefaultBuilder(args)
+                        .ConfigureLogging(logging =>
+                        {
+                            logging.ClearProviders();          // Optional: removes default providers
+                            logging.AddConsole();              // ✅ Add Console logging
+                            logging.SetMinimumLevel(LogLevel.Information); // Set log level
+                        })
                         .ConfigureWebHostDefaults(webBuilder =>
                         {
                             webBuilder.UseStartup<Startup>();
