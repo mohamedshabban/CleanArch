@@ -8,39 +8,57 @@ namespace CleanArch.Mvc
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            CreateHostBuilder(args).Build().Run();
+        }
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
+                    Host.CreateDefaultBuilder(args)
+                        .ConfigureWebHostDefaults(webBuilder =>
+                        {
+                            webBuilder.UseStartup<Startup>();
+                        });
+    }
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+        public IConfiguration Configuration { get; }
+        public void ConfigureServices(IServiceCollection services)
+        {
 
             // Add services to the container.
-            var connectionString = builder.Configuration.GetConnectionString("UniversityDbConnection")
+            var connectionString = Configuration.GetConnectionString("UniversityDbConnection")
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services
+            services
                 .AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            builder.Services.AddControllersWithViews();
+            services.AddControllersWithViews();
 
-            builder.Services.ConfigureApplicationCookie(options =>
+            services.ConfigureApplicationCookie(options =>
             {
                 options.Cookie.Name = ".AspNetCore.Identity.Application"; // default name
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(1000);        // how long user stays logged in
                 options.SlidingExpiration = true;                        // renews cookie if user is active
                 options.LoginPath = "/Identity/Account/Login";            // redirect if not logged in
             });
-            var app = builder.Build();
 
+        }
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                app.UseHsts(); // Recommended in production
             }
 
             app.UseHttpsRedirection();
@@ -50,12 +68,14 @@ namespace CleanArch.Mvc
 
             app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.MapRazorPages();
-
-            app.Run();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+            });
         }
+
     }
 }
